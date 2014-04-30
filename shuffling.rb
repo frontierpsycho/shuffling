@@ -23,7 +23,7 @@ module Shuffling
 
       chi_square = Statsample::Test.chi_square(Matrix.row_vector(observed), Matrix.row_vector(@expected))
 
-      @results[shuffler.class.name] = chi_square.probability
+      @results[shuffler.name] = chi_square.probability
     end
 
     def pd(local_result)
