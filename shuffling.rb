@@ -12,8 +12,15 @@ module Shuffling
       @expected = Array.new(@deck_size, 1.0 / @deck_size)
     end
 
+    def init_local_result
+      keys = (0...@deck.size).to_a
+      values = Array.new(@deck.size, 0)
+
+      Hash[keys.zip(values)]
+    end
+
     def evaluate(shuffler)
-      local_result = Hash.new(0)
+      local_result = self.init_local_result
       (1..@times).each do
         shuffled_deck = shuffler.shuffle(@deck)
         local_result[shuffled_deck.index(1)] += 1
