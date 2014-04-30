@@ -22,6 +22,10 @@ module Shuffling
       piles[rand(0...piles.size)] << card
     end
 
+    def gather_piles(piles)
+      piles.shuffle!.flatten
+    end
+
     def shuffle(deck)
       piles = Array.new(deck.size / @pile_factor) { Array.new }
 
@@ -29,7 +33,28 @@ module Shuffling
         self.place_card_on_random_pile(piles, card)
       end
 
-      piles.shuffle!.flatten
+      self.gather_piles(piles)
+    end
+  end
+
+  class VariablePileShuffle < PileShuffle
+    def name
+      "Variable pile shuffle"
+    end
+
+    def place_card_on_random_pile(piles, card)
+      piles << Array.new if rand() < 1.0 / @pile_factor
+      super(piles, card)
+    end
+  end
+
+  class VariablePileShuffleHuman < VariablePileShuffle
+    def name
+      "Variable pile shuffle with serial gathering"
+    end
+
+    def gather_piles(piles)
+      piles.flatten
     end
   end
 end

@@ -6,5 +6,7 @@ module Shuffling
 
   evaluator.evaluate(RubyShuffler.new)
   evaluator.evaluate(PileShuffle.new)
+  evaluator.evaluate(VariablePileShuffle.new)
+  evaluator.evaluate(VariablePileShuffleHuman.new)
   puts evaluator.results
 end
