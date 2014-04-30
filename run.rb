@@ -36,16 +36,16 @@ module Shuffling
 
     def initialize(shufflerClass)
       @shuffler = shufflerClass.new
-      self.runEvaluation
+      self.async.runEvaluation
     end
 
     def runEvaluation
       puts "Running #{@shuffler.name}"
-      evaluator = Evaluator.new
+      evaluator = Evaluator.new(3000)
       puts "#{@shuffler.name} evaluating..."
       evaluator.evaluate(@shuffler)
       puts "#{@shuffler.name} evaluated."
-      Celluloid::Actor[:aggregator].add_result(evaluator.results)
+      Celluloid::Actor[:aggregator].async.add_result(evaluator.results)
       self.terminate
     end
   end
@@ -60,5 +60,5 @@ module Shuffling
     end
   end
 
-  ShufflerSupervisionGroup.run!
+  ShufflerSupervisionGroup.run
 end
