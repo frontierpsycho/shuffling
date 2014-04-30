@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    celluloid (0.15.2)
+      timers (~> 1.1.0)
     clbustos-rtf (0.4.2)
     dirty-memoize (0.0.4)
     distribution (0.7.0)
@@ -44,9 +46,11 @@ GEM
     statsample-bivariate-extension (1.1.0)
       distribution (~> 0.6)
     text-table (1.2.3)
+    timers (1.1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  celluloid
   statsample
