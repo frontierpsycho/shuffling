@@ -5,24 +5,22 @@ module Shuffling
     def initialize(shuffler)
       @deck = (1..30).to_a
       @results = Hash.new(0)
-      @shuffler = shuffler
+      @shuffler = Shuffling.method(shuffler)
     end
 
     def evaluate
       (1..300_000).each do
-        shuffled_deck = @shuffler.shuffle(@deck)
+        shuffled_deck = @shuffler.call(@deck)
         @results[shuffled_deck.index(1)] += 1
       end
     end
   end
 
-  class RubyShuffler
-    def shuffle(deck)
-      deck.shuffle
-    end
+  def self.ruby_shuffle(deck)
+    deck.shuffle
   end
 
-  evaluator = Evaluator.new(RubyShuffler.new)
+  evaluator = Evaluator.new(:ruby_shuffle)
   evaluator.evaluate
 
   puts evaluator.results
