@@ -5,6 +5,7 @@ require './shufflers'
 
 
 module Shuffling
+
   class AggregatorActor
     include Celluloid
 
@@ -42,8 +43,10 @@ module Shuffling
     end
 
     def runEvaluation
+      times = ARGV.length > 0 ? Integer(ARGV[0]) : 300_000
+
       puts "Running #{@shuffler.name}"
-      evaluator = Evaluator.new
+      evaluator = Evaluator.new(times)
       puts "#{@shuffler.name} evaluating..."
       evaluator.evaluate(@shuffler)
       puts "#{@shuffler.name} evaluated."
