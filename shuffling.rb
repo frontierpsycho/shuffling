@@ -4,7 +4,7 @@ module Shuffling
   class Evaluator
     attr_reader :results
 
-    def initialize(times: 300_000, deck_size: 30)
+    def initialize(times=300_000, deck_size=30)
       @deck_size = deck_size
       @deck = (1..@deck_size).to_a
       @results = {}

@@ -10,7 +10,7 @@ module Shuffling
   end
 
   class PileShuffle
-    def initialize(pile_factor: 8)
+    def initialize(pile_factor=8)
       @pile_factor = pile_factor
     end
 
