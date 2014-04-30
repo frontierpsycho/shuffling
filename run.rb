@@ -13,17 +13,19 @@ module Shuffling
       @results = {}
     end
 
+    def wait_for_results
+      sleep 5 while not @shufflerset.empty?
+
+      self.output
+      self.terminate
+    end
+
     def add_result(result)
       @results.merge! result
 
       @shufflerset = @shufflerset - result.keys
 
       puts "Results for #{result.keys.inspect} recorded, remaining: #{@shufflerset.inspect}"
-
-      if @shufflerset.empty?
-        self.output
-        self.terminate
-      end
     end
 
     def output
@@ -41,24 +43,22 @@ module Shuffling
 
     def runEvaluation
       puts "Running #{@shuffler.name}"
-      evaluator = Evaluator.new(3000)
+      evaluator = Evaluator.new
       puts "#{@shuffler.name} evaluating..."
       evaluator.evaluate(@shuffler)
       puts "#{@shuffler.name} evaluated."
-      Celluloid::Actor[:aggregator].async.add_result(evaluator.results)
+      Actor[:aggregator].async.add_result(evaluator.results)
       self.terminate
     end
   end
 
-  class ShufflerSupervisionGroup < Celluloid::SupervisionGroup
-    shufflers = [RubyShuffler, PileShuffle, VariablePileShuffle, VariablePileShuffleHuman].to_set
+  shufflers = [RubyShuffler, PileShuffle, VariablePileShuffle, VariablePileShuffleHuman].to_set
 
-    supervise AggregatorActor, as: :aggregator, args: [shufflers.map { |sh| sh.new.name }]
+  Celluloid::Actor[:aggregator] = AggregatorActor.new(shufflers.map { |sh| sh.new.name })
 
-    shufflers.each do |shuffler|
-      supervise EvalActor, as: shuffler.name.to_sym, args: [shuffler]
-    end
+  shufflers.each do |shuffler|
+    Celluloid::Actor[shuffler.name.to_sym] = EvalActor.new shuffler
   end
 
-  ShufflerSupervisionGroup.run
+  Celluloid::Actor[:aggregator].wait_for_results
 end
