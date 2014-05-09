@@ -128,16 +128,16 @@ module Shuffling
 
   class MultipleRiffleShuffle
     def initialize
-      riffle_shufflers = Array.new(self.riffle_cardinality, RiffleShuffle)
+      riffle_shufflers = Array.new(self.shuffle_cardinality, RiffleShuffle)
       @internal_shuffler = CompositeShuffler.new riffle_shufflers
     end
 
-    def riffle_cardinality
+    def shuffle_cardinality
       1
     end
 
     def name
-      "#{self.riffle_cardinality}-riffle shuffle"
+      "#{self.shuffle_cardinality}-riffle shuffle"
     end
 
     def shuffle(deck)
