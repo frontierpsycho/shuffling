@@ -1,3 +1,5 @@
+require './shuffle_util'
+
 module Shuffling
   class RubyShuffler
     def name
@@ -118,13 +120,7 @@ module Shuffling
       # this tries to approximately divide in the middle
       # almost following a bell curve around it
       # see wikipedia "Normal distribution"
-
-      random_sum = 0
-      12.times do
-        random_sum += rand()
-      end
-
-      i = deck.size * random_sum / 12
+      i = Shuffling.discrete_normal_random(deck.size)
 
       return deck[0...i], deck[i..-1]
     end
