@@ -12,7 +12,7 @@ module Shuffling
   class CompositeShuffler
     attr_reader :shufflers
 
-    def initialize(*shuffler_class_list)
+    def initialize(shuffler_class_list)
       @shufflers = shuffler_class_list.map do |shuffler_class|
         begin
           shuffler = shuffler_class.new
@@ -31,8 +31,6 @@ module Shuffling
 
     def shuffle(deck)
       @shufflers.reduce(deck) { |deck, shuffler|
-        puts "Shuffling with #{shuffler.name}"
-
         shuffler.shuffle(deck)
       }
     end
@@ -102,9 +100,9 @@ module Shuffling
       new_deck = []
 
       while not new_deck.size == deck.size
-        threshold = top_half.size / deck.size
+        threshold = top_half.size.to_f / (top_half.size + bottom_half.size)
 
-        if rand() > threshold
+        if rand() < threshold
           new_deck << top_half.delete_at(-1)
         else
           new_deck << bottom_half.delete_at(-1)
