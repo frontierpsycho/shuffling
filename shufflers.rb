@@ -26,8 +26,12 @@ module Shuffling
       piles.shuffle!.flatten
     end
 
+    def pile_cardinality(deck)
+      [deck.size / @pile_factor, 1].max
+    end
+
     def shuffle(deck)
-      piles = Array.new(deck.size / @pile_factor) { Array.new }
+      piles = Array.new(self.pile_cardinality(deck)) { Array.new }
 
       deck.each do |card|
         self.place_card_on_random_pile(piles, card)
