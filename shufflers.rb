@@ -9,6 +9,35 @@ module Shuffling
     end
   end
 
+  class CompositeShuffler
+    attr_reader :shufflers
+
+    def initialize(*shuffler_class_list)
+      @shufflers = shuffler_class_list.map do |shuffler_class|
+        begin
+          shuffler = shuffler_class.new
+          shuffler.method :shuffle
+
+          shuffler
+        rescue NameError
+          raise ArgumentError, "Arguments should be shuffler classes", caller
+        end
+      end
+    end
+
+    def name
+      "Composite shuffle: #{@shufflers.map( &name ).join(", ")}"
+    end
+
+    def shuffle(deck)
+      @shufflers.reduce(deck) { |deck, shuffler|
+        puts "Shuffling with #{shuffler.name}"
+
+        shuffler.shuffle(deck)
+      }
+    end
+  end
+
   class PileShuffle
     def initialize(pile_factor=8)
       @pile_factor = pile_factor
