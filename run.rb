@@ -43,7 +43,7 @@ module Shuffling
     end
 
     def runEvaluation
-      times = ARGV.length > 0 ? Integer(ARGV[0]) : 300_000
+      times = ARGV.length > 0 ? Integer(ARGV[0]) : 3_000_000
 
       puts "Running #{@shuffler.name}"
       evaluator = Evaluator.new(times)
