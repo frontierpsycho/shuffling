@@ -146,14 +146,56 @@ module Shuffling
   end
 
   class SevenRiffleShuffle < MultipleRiffleShuffle
-    def riffle_cardinality
+    def shuffle_cardinality
       7
     end
   end
 
   class ThreeRiffleShuffle < MultipleRiffleShuffle
-    def riffle_cardinality
+    def shuffle_cardinality
       3
+    end
+  end
+
+  class IndianShuffle
+    def initialize(strip_factor=8)
+      @strip_factor = strip_factor
+    end
+
+    def name
+      "Indian shuffle"
+    end
+
+    def shuffle(deck)
+      deck_size = deck.size
+      new_deck = []
+
+      while new_deck.size < deck_size
+        i = Shuffling.discrete_normal_random(@strip_factor)
+
+        new_deck << deck.slice!(0, i)
+      end
+
+      new_deck.flatten
+    end
+  end
+
+  class MultipleIndianShuffle
+    def name
+      "#{self.shuffle_cardinality}-indian shuffle"
+    end
+
+    def initialize
+      indian_shufflers = Array.new(self.shuffle_cardinality, IndianShuffle)
+      @internal_shuffler = CompositeShuffler.new indian_shufflers
+    end
+
+    def shuffle_cardinality
+      3
+    end
+
+    def shuffle
+      @internal_shuffler.shuffle(deck)
     end
   end
 end
