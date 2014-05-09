@@ -126,10 +126,14 @@ module Shuffling
     end
   end
 
-  class MultipleRiffleShuffle
+  class MultipleShuffle
     def initialize
-      riffle_shufflers = Array.new(self.shuffle_cardinality, RiffleShuffle)
-      @internal_shuffler = CompositeShuffler.new riffle_shufflers
+      shufflers = Array.new(self.shuffle_cardinality, self.shuffle_class)
+      @internal_shuffler = CompositeShuffler.new shufflers
+    end
+
+    def shuffle_class
+      RubyShuffle
     end
 
     def shuffle_cardinality
@@ -137,11 +141,21 @@ module Shuffling
     end
 
     def name
-      "#{self.shuffle_cardinality}-riffle shuffle"
+      "#{self.shuffle_cardinality}-#{shuffle_class.name} shuffle"
     end
 
     def shuffle(deck)
       @internal_shuffler.shuffle(deck)
+    end
+  end
+
+  class MultipleRiffleShuffle < MultipleShuffle
+    def shuffle_class
+      RiffleShuffle
+    end
+
+    def name
+      "#{self.shuffle_cardinality}-riffle shuffle"
     end
   end
 
@@ -167,35 +181,31 @@ module Shuffling
     end
 
     def shuffle(deck)
-      deck_size = deck.size
+      deck_copy = Array.new(deck)
+      deck_size = deck_copy.size
       new_deck = []
 
       while new_deck.size < deck_size
         i = Shuffling.discrete_normal_random(@strip_factor)
 
-        new_deck << deck.slice!(0, i)
+        new_deck << deck_copy.slice!(0, i)
       end
 
-      new_deck.flatten
+      new_deck.reverse.flatten
     end
   end
 
-  class MultipleIndianShuffle
+  class ThreeIndianShuffle < MultipleShuffle
     def name
-      "#{self.shuffle_cardinality}-indian shuffle"
+      "Three Indian shuffle"
     end
 
-    def initialize
-      indian_shufflers = Array.new(self.shuffle_cardinality, IndianShuffle)
-      @internal_shuffler = CompositeShuffler.new indian_shufflers
+    def shuffle_class
+      IndianShuffle
     end
 
     def shuffle_cardinality
       3
-    end
-
-    def shuffle
-      @internal_shuffler.shuffle(deck)
     end
   end
 end
