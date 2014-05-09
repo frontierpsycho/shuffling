@@ -129,4 +129,35 @@ module Shuffling
       return deck[0...i], deck[i..-1]
     end
   end
+
+  class MultipleRiffleShuffle
+    def initialize
+      riffle_shufflers = Array.new(self.riffle_cardinality, RiffleShuffle)
+      @internal_shuffler = CompositeShuffler.new riffle_shufflers
+    end
+
+    def riffle_cardinality
+      1
+    end
+
+    def name
+      "#{self.riffle_cardinality}-riffle shuffle"
+    end
+
+    def shuffle(deck)
+      @internal_shuffler.shuffle(deck)
+    end
+  end
+
+  class SevenRiffleShuffle < MultipleRiffleShuffle
+    def riffle_cardinality
+      7
+    end
+  end
+
+  class ThreeRiffleShuffle < MultipleRiffleShuffle
+    def riffle_cardinality
+      3
+    end
+  end
 end

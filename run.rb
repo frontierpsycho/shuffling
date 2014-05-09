@@ -55,7 +55,15 @@ module Shuffling
     end
   end
 
-  shufflers = [RubyShuffler, PileShuffle, VariablePileShuffle, VariablePileShuffleHuman, RiffleShuffle].to_set
+  shufflers = [
+    RubyShuffler,
+    PileShuffle,
+    VariablePileShuffle,
+    VariablePileShuffleHuman,
+    RiffleShuffle,
+    ThreeRiffleShuffle,
+    SevenRiffleShuffle
+  ].to_set
 
   Celluloid::Actor[:aggregator] = AggregatorActor.new(shufflers.map { |sh| sh.new.name })
 
