@@ -15,7 +15,7 @@ module Shuffling
     end
 
     def wait_for_results
-      sleep 5 while not @shufflerset.empty?
+      sleep(1.0/10) while not @shufflerset.empty?
 
       self.output
       self.terminate
