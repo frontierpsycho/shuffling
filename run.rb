@@ -62,7 +62,9 @@ module Shuffling
     VariablePileShuffleHuman,
     RiffleShuffle,
     ThreeRiffleShuffle,
-    SevenRiffleShuffle
+    SevenRiffleShuffle,
+    ThreeIndianShuffle,
+    AwesomeSuperMegaShuffle
   ].to_set
 
   Celluloid::Actor[:aggregator] = AggregatorActor.new(shufflers.map { |sh| sh.new.name })

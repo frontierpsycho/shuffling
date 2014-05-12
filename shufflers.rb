@@ -208,4 +208,18 @@ module Shuffling
       3
     end
   end
+
+  class AwesomeSuperMegaShuffle
+    def initialize
+      @internal_shuffler = CompositeShuffler.new [VariablePileShuffle, IndianShuffle]
+    end
+
+    def name
+      "Awesome super mega shuffle"
+    end
+
+    def shuffle(deck)
+      @internal_shuffler.shuffle(deck)
+    end
+  end
 end
