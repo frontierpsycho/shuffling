@@ -1,6 +1,6 @@
 require 'celluloid'
 
-require './shuffling'
+require './evaluators'
 require './shufflers'
 
 
@@ -64,7 +64,9 @@ module Shuffling
     ThreeRiffleShuffle,
     SevenRiffleShuffle,
     ThreeIndianShuffle,
-    AwesomeSuperMegaShuffle
+    AwesomeSuperMegaShuffle,
+    CuttingShuffle,
+    HumanCuttingShuffle
   ].to_set
 
   Celluloid::Actor[:aggregator] = AggregatorActor.new(shufflers.map { |sh| sh.new.name })

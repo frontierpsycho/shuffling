@@ -11,6 +11,32 @@ module Shuffling
     end
   end
 
+  class CuttingShuffle
+    def name
+      "Cutting shuffle"
+    end
+
+    def cut(deck)
+      rand(deck.size)
+    end
+
+    def shuffle(deck)
+      cutting_point = self.cut(deck)
+
+      return deck[cutting_point..-1] + deck[0...cutting_point]
+    end
+  end
+
+  class HumanCuttingShuffle < CuttingShuffle
+    def name
+      "Human cutting shuffle"
+    end
+
+    def cut(deck)
+      Shuffling.discrete_normal_random(deck.size)
+    end
+  end
+
   class CompositeShuffler
     attr_reader :shufflers
 
