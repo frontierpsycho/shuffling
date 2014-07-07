@@ -9,35 +9,49 @@ module Shuffling
       @deck = (1..@deck_size).to_a
       @results = {}
       @times = times
-      @expected = Array.new(@deck_size, 1.0 / @deck_size) 
+      @expected_place_pd = Array.new(@deck_size, 1.0 / @deck_size) 
+      @expected_distance_pd = Array.new(2 * (@deck_size - 1), 1.0 / (2 * (@deck_size - 1)))
     end
 
-    def init_occurence_count
+    def init_occurence_counts
       keys = (0...@deck.size).to_a
       values = Array.new(@deck.size, 0)
 
       Hash[keys.zip(values)]
     end
 
+    def init_distance_counts
+      keys = (-(@deck.size-1)..-1).to_a + (1...@deck.size).to_a
+      values = Array.new(2 * (@deck.size - 1), 0)
+
+      Hash[keys.zip(values)]
+    end
+
     def evaluate(shuffler)
-      occurence_count = self.init_occurence_count
+      occurence_counts = self.init_occurence_counts
+      distance_counts = self.init_distance_counts
+
       (1..@times).each do
         shuffled_deck = shuffler.shuffle(@deck)
-        occurence_count[shuffled_deck.index(1)] += 1
+        index_of_1 = shuffled_deck.index(1)
+        index_of_2 = shuffled_deck.index(2)
+        occurence_counts[index_of_1] += 1
+        distance_counts[index_of_2 - index_of_1] += 1
       end
 
-      observed = self.pd(occurence_count)
+      observed_place = self.pd(occurence_counts)
+      chi_square_place = Statsample::Test.chi_square(Matrix.row_vector(observed_place), Matrix.row_vector(@expected_place_pd))
 
-      chi_square = Statsample::Test.chi_square(Matrix.row_vector(observed), Matrix.row_vector(@expected))
+      observed_distance = self.pd(distance_counts)
+      chi_square_distance = Statsample::Test.chi_square(Matrix.row_vector(observed_distance), Matrix.row_vector(@expected_distance_pd))
 
-      @results[shuffler.name] = chi_square.probability
+      @results[shuffler.name] = [chi_square_place.probability, chi_square_distance.probability]
     end
 
     def pd(occurence_count)
-      res = occurence_count.values.map do |value|
+      occurence_count.values.map do |value|
         value / @times.to_f
       end
-      res
     end
   end
 

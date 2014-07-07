@@ -65,8 +65,8 @@ module Shuffling
     SevenRiffleShuffle,
     ThreeIndianShuffle,
     AwesomeSuperMegaShuffle,
-    CuttingShuffle,
-    HumanCuttingShuffle
+    CuttingShuffle
+    #HumanCuttingShuffle
   ].to_set
 
   Celluloid::Actor[:aggregator] = AggregatorActor.new(shufflers.map { |sh| sh.new.name })
